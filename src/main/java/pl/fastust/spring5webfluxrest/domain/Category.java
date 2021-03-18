@@ -1,6 +1,9 @@
 package pl.fastust.spring5webfluxrest.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,6 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * Created by Tom - 18.03.2021
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Document
 public class Category {
 
