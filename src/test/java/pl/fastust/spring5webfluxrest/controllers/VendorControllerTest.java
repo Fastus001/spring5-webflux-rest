@@ -3,14 +3,15 @@ package pl.fastust.spring5webfluxrest.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.reactivestreams.Publisher;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.fastust.spring5webfluxrest.domain.Vendor;
 import pl.fastust.spring5webfluxrest.repositories.VendorRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static org.mockito.ArgumentMatchers.any;
 
 class VendorControllerTest {
 
@@ -51,5 +52,20 @@ class VendorControllerTest {
         webTestClient.get().uri(API_V_1_VENDORS+"/"+SOME_ID)
                 .exchange()
                 .expectBody(Vendor.class);
+    }
+
+    @Test
+    void create(){
+        BDDMockito.given(vendorRepository.saveAll(any(Publisher.class)))
+                .willReturn(Flux.just(Vendor.builder().build()));
+
+        final Mono<Vendor> vendorToSaveMono = Mono.just(Vendor.builder()
+                .firstName(VENDOR_ONE).lastName(LAST_NAME).build());
+
+        webTestClient.post().uri("/api/v1/vendors")
+                .body(vendorToSaveMono,Vendor.class)
+                .exchange()
+                .expectStatus()
+                .isCreated();
     }
 }

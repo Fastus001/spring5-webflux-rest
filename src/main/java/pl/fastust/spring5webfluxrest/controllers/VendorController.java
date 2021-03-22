@@ -1,8 +1,8 @@
 package pl.fastust.spring5webfluxrest.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.reactivestreams.Publisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import pl.fastust.spring5webfluxrest.domain.Vendor;
 import pl.fastust.spring5webfluxrest.repositories.VendorRepository;
 import reactor.core.publisher.Flux;
@@ -28,5 +28,11 @@ public class VendorController {
     @GetMapping("/api/v1/vendors/{id}")
     Mono<Vendor> getById(@PathVariable String id){
         return vendorRepository.findById(id);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/api/v1/vendors")
+    Mono<Void> create(@RequestBody Publisher<Vendor> vendorPublisher){
+        return vendorRepository.saveAll(vendorPublisher).then();
     }
 }
